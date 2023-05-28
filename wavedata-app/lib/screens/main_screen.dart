@@ -1441,7 +1441,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                                           FontWeight.w700)),
                                               Text(
                                                   userDetails['credits']
-                                                      .toString() + " TRX",
+                                                      .toString() + " tEVMOS",
                                                   style: GoogleFonts.getFont(
                                                       'Lexend Deca',
                                                       color: Color(0xFFF06129),
@@ -1568,7 +1568,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                                                   ? userDetails[
                                                                       'ongoingcredit']
                                                                   : 0)
-                                                              .toString() + " TRX",
+                                                              .toString() + " tEVMOS",
                                                           style: GoogleFonts
                                                               .getFont(
                                                                   'Lexend Deca',
