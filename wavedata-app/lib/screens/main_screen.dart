@@ -367,7 +367,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         'userid': userid.toString(),
         'given_permission': JsonMadePermission
       });
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 3));
       Navigator.pop(context);
     }
 
@@ -1574,7 +1574,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                                                   'Lexend Deca',
                                                                   color: Color(
                                                                       0xFFF06129),
-                                                                  fontSize: 20,
+                                                                  fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w700))

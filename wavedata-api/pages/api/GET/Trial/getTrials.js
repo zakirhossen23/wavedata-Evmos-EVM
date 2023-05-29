@@ -9,9 +9,9 @@ export default async function handler(req, res) {
   const {contract, signerAddress} = await useContract.default();
 
   let Trials = [];
-  let TotalTrials = await contract._TrialIds().call();
+  let TotalTrials = await contract._TrialIds();
   for (let i = 0; i < Number(TotalTrials); i++) {
-    let trial_element = await contract._trialMap(Number(i)).call();
+    let trial_element = await contract._trialMap(Number(i));
 
     var newTrial = {
       id: Number(trial_element.trial_id),

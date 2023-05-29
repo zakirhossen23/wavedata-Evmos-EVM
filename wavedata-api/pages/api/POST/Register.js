@@ -5,12 +5,11 @@ export async function GenerateAccessToken(fullname) {
 	myHeaders.append("AppAuthorization", wearableinfo.AppAuthorization);
 	myHeaders.append("Content-Type", wearableinfo["Content-Type"]);
 	myHeaders.append("Authorization", wearableinfo.Authorization);
-	let uniqueName = fullname.toLowerCase().trim() + Math.floor(Math.random() * Date.now()).toString(16);
+	let uniqueName = fullname.replace(/\s/g, "").toLowerCase().trim() + Math.floor(Math.random() * Date.now()).toString(16);
 
 	var urlencoded = new URLSearchParams();
 	urlencoded.append("partnerUserID", uniqueName);
 	urlencoded.append("language", "en");
-
 	var requestOptions = {
 		method: "POST",
 		headers: myHeaders,
@@ -18,9 +17,9 @@ export async function GenerateAccessToken(fullname) {
 		redirect: "follow"
 	};
 
-	let accessToken = await (await fetch("https://api.und-gesund.de/v5/accessToken", requestOptions)).text();
-	return accessToken;
-	// return "25bde54301e7a3bf7bfe8d82da80c50e";
+	// let accessToken = await (await fetch("https://api.und-gesund.de/v5/accessToken", requestOptions)).text();
+	// return accessToken;
+	return "bf744188d37055ee5f89e643c82cafa7";
 }
 export default async function handler(req, res) {
 	try {
@@ -35,7 +34,7 @@ export default async function handler(req, res) {
 		return;
 	}
 	const {fullname, email, password} = req.body;
-	const result = await contract.CheckEmail(email).call();
+	const result = await contract.CheckEmail(email);
     
 	if (result !== "False") {
 		res.status(403).json({status: 403, error: "Account already exists!"});
@@ -43,7 +42,7 @@ export default async function handler(req, res) {
 	}
 	let accessToken = await GenerateAccessToken(fullname);
 	
-	await contract.CreateAccount(fullname, email, password, accessToken,signerAddress).send({
+	await contract.CreateAccount(fullname, email, password, accessToken,signerAddress,{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

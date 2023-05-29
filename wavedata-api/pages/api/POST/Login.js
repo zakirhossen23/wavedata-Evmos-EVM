@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const {contract, signerAddress} = await useContract.default();
 	
   const { email, password } = req.body;
-	let output = await contract.Login(email, password).call();
+	let output = await contract.Login(email, password);
   res.status(200).json({ status: 200, value: output })
 
 }

@@ -15,11 +15,11 @@ export default async function handler(req, res) {
     }
   
     const { userid, image } = req.body;
-    let details_element = await contract.getUserDetails(Number(userid)).call();
+    let details_element = await contract.getUserDetails(Number(userid));
   
     console.log(details_element);
 	
-    await contract.UpdateUser(Number(userid), image, Number(details_element[1])).send({
+    await contract.UpdateUser(Number(userid), image, Number(details_element[1]),{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

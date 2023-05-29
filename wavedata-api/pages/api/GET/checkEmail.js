@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   let useContract = await import("../../../contract/useContract.ts");
   const {contract, signerAddress} = await useContract.default();
-	let output = await contract.CheckEmail(req.query.email).call();
+	let output = await contract.CheckEmail(req.query.email);
 			
   res.status(200).json({ value: output })
 }

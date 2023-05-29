@@ -7,12 +7,12 @@ export default async function handler(req, res) {
 
   let useContract = await import("../../../../contract/useContract.ts");
 	const {contract, signerAddress} = await useContract.default();
-	let trial_id = await contract.GetOngoingTrial(Number(req.query.userid)).call();
-	let totalTrials = await contract._TrialIds().call();
+	let trial_id = await contract.GetOngoingTrial(Number(req.query.userid));
+	let totalTrials = await contract._TrialIds();
 
   let all_available_trials = [];
   for (let i = 0; i < Number(totalTrials); i++) {
-    let trial_element = await contract._trialMap(Number(i)).call();
+    let trial_element = await contract._trialMap(Number(i));
 
     var newTrial = {
       id: Number(trial_element.trial_id),

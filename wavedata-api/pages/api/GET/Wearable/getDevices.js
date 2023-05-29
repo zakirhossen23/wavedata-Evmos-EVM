@@ -9,14 +9,15 @@ export default async function handler(req, res) {
 
 	let useContract = await import("../../../../contract/useContract.ts");
 	const {contract, signerAddress} = await useContract.default();
-	let details_element = await contract.getUserDetails(Number(req.query.userid)).call();
-	
+	let details_element = await contract.getUserDetails(Number(req.query.userid));
+	let details_element_writable = [...details_element]
+
 	if (details_element[5] === "") {
 		let registerpage = await import("../../POST/Register");
-		details_element[5] = await registerpage.GenerateAccessToken(details_element[2]);
+		details_element_writable[5] = await registerpage.GenerateAccessToken(details_element[2]);
 
 		
-	await contract.UpdateAccessToken(Number(req.query.userid), details_element[5]).send({
+	await contract.UpdateAccessToken(Number(req.query.userid), details_element_writable[5],{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
 	myHeaders.append("Authorization", wearableinfo.Authorization);
 
 	var urlencoded = new URLSearchParams();
-	urlencoded.append("authenticationToken", details_element[5]);
+	urlencoded.append("authenticationToken", details_element_writable[5]);
 
 	var requestOptions = {
 		method: "POST",

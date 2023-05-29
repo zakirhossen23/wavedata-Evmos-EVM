@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const item = alldata[i];
     const { trialid,userid,surveyid, sectionid,questionid ,answer  } = item;
   
-    await contract.CreateQuestionAnswer(Number(trialid),Number(userid),Number(surveyid),sectionid,questionid ,answer).send({
+    await contract.CreateQuestionAnswer(Number(trialid),Number(userid),Number(surveyid),sectionid,questionid ,answer,{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

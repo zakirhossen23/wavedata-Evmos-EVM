@@ -17,20 +17,20 @@ export default async function handler(req, res) {
 
   const { surveyid, userid, date, trialid } = req.body;
 
-	let survey_element = await contract._surveyMap(Number(surveyid)).call();
+	let survey_element = await contract._surveyMap(Number(surveyid));
   
-	let details_element = await contract.getUserDetails(Number(userid)).call();
+	let details_element = await contract.getUserDetails(Number(userid));
   
   
   let credits = Number(details_element[1]) + Number(survey_element.reward)
 
   
-  await contract.UpdateUser(Number(userid), details_element[0], Number(credits)).send({
+  await contract.UpdateUser(Number(userid), details_element[0], Number(credits),{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});
   
-  await contract.CreateCompletedSurveys(Number(surveyid), Number(userid), date, Number(trialid)).send({
+  await contract.CreateCompletedSurveys(Number(surveyid), Number(userid), date, Number(trialid),{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

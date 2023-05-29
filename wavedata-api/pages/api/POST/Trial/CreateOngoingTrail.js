@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   
     const { trialid,userid,given_permission } = req.body;
  
-    await contract.CreateOngoingTrail(Number(trialid),Number(userid),(new Date()).toISOString(),given_permission ).send({
+    await contract.CreateOngoingTrail(Number(trialid),Number(userid),(new Date()).toISOString(),given_permission ,{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

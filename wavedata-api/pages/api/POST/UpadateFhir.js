@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 	let DiseasesDiagnostic = allDiagnostic[allDiagnostic.length - 1]["resource"]["presentedForm"][0]["data"];
 	
 	let decodedDisease = base64DecodeUnicode(DiseasesDiagnostic);
-	await contract.UpdateFhir(Number(userid), patient_details["name"][0]['family'], givenname, identifier, patient_details["telecom"][0]["value"].toString(), patient_details["gender"], decodedDisease, patientid).send({
+	await contract.UpdateFhir(Number(userid), patient_details["name"][0]['family'], givenname, identifier, patient_details["telecom"][0]["value"].toString(), patient_details["gender"], decodedDisease, patientid,{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});

@@ -11,7 +11,7 @@ export default async function useContract() {
 		signerAddress: null,		
 	};
 	// const Web3 = require('web3');
-	let private_key = "fb57cdb52c16a26a9f54d37ce8f106bc4a334772d5c376c08f009e042cb0a7fe";
+	let private_key = "fcd5e870c919104aa494cf850c4132baa99286a1f863b99888a1853908eaa92c";
 	let provider_url = "https://eth.bd.evmos.dev:8545";
 	const provider = new ethers.providers.JsonRpcProvider(provider_url);
 	const signer = new ethers.Wallet(private_key,provider)
