@@ -23,8 +23,13 @@ export default function CreateSurveyModal({
         surveyBTN.children[1].innerText = ""
         surveyBTN.disabled = true;
         try {
-            await window.sendTransaction(window.contract.CreateSurvey(parseInt(Tiralid),Number(Cookies.get("userid")),name.value,description.value,d,image.value, Number(reward.value)));
-			
+            const methodWithSignature = (window.contract.CreateSurvey(parseInt(Tiralid),Number(Cookies.get("userid")),name.value,description.value,d,image.value, Number(reward.value)));
+            let new_amount  = `${(Number(reward.value) * 1e18)}`;
+            await methodWithSignature.send({
+                from: window.ethereum.selectedAddress,
+                gasPrice: 10_000_000_000,
+                value: new_amount
+            });
             notificationSuccess.style.display = "block";
             surveyBTN.children[0].classList.add("hidden")
             surveyBTN.children[1].innerText = "Create Survey"

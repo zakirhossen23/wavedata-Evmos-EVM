@@ -13,8 +13,8 @@ contract WaveData {
         string email;
         ///Password of user
         string password;
-        ///Address of Wallet
-        string walletaddress;
+        ///Address of Wallet in Address Type
+        address walletaddress_address;
         ///Privatekey of user
         string privatekey;
         /// The User Image
@@ -133,6 +133,14 @@ contract WaveData {
         uint256 survey_id;
         string date;
     }
+    /// Paid Survey Trial
+    struct paid_survey_struct {
+        uint256 paid_survey_id;
+        uint256 trial_id;
+        uint256 user_id;
+        uint256 survey_id;
+        string date;
+    }
 
     uint256 public _UserIds;
     uint256 public _FhirIds;
@@ -169,11 +177,9 @@ contract WaveData {
     address public owner;
 
     //Login User
-    function CheckEmail(string memory email)
-        public
-        view
-        returns (string memory)
-    {
+    function CheckEmail(
+        string memory email
+    ) public view returns (string memory) {
         ///Getting the found account
         for (uint256 i = 0; i < _UserIds; i++) {
             if (
@@ -194,7 +200,7 @@ contract WaveData {
         string memory email,
         string memory password,
         string memory accesstoken,
-        string memory walletaddress
+        address walletaddress_address
     ) public {
         // Store the metadata of user in the map.
         _userMap[_UserIds] = user_struct({
@@ -203,34 +209,33 @@ contract WaveData {
             email: email,
             password: password,
             privatekey: "",
-            walletaddress:walletaddress,
             image: "https://i.postimg.cc/SsxGw5cZ/person.jpg",
             credits: 0,
             accesstoken: accesstoken,
-            fhirid:0
+            fhirid: 0,
+            walletaddress_address: walletaddress_address
         });
         _UserIds++;
     }
 
     //Update Privatekey
     function UpdatePrivatekey(uint256 userid, string memory privatekey) public {
-     
         _userMap[userid].privatekey = privatekey;
     }
 
     //Update AccessToken
-    function UpdateAccessToken(uint256 userid, string memory accesstoken)
-        public
-    {
+    function UpdateAccessToken(
+        uint256 userid,
+        string memory accesstoken
+    ) public {
         _userMap[userid].accesstoken = accesstoken;
     }
 
     //Login User
-    function Login(string memory email, string memory password)
-        public
-        view
-        returns (string memory)
-    {
+    function Login(
+        string memory email,
+        string memory password
+    ) public view returns (string memory) {
         ///Getting the found account
         for (uint256 i = 0; i < _UserIds; i++) {
             if (
@@ -287,7 +292,7 @@ contract WaveData {
         string memory date,
         string memory image,
         uint256 reward
-    ) public {
+    ) public payable {
         // Store the metadata of Survey in the map.
         _surveyMap[_SurveyIds] = survey_struct({
             survey_id: _SurveyIds,
@@ -304,17 +309,19 @@ contract WaveData {
     }
 
     //Create or Save Sections
-    function CreateOrSaveSections(uint256 survey_id, string memory metadata)
-        public
-    {
+    function CreateOrSaveSections(
+        uint256 survey_id,
+        string memory metadata
+    ) public {
         // Store the metadata of all Sections in the map.
         _sectionsMap[survey_id] = metadata;
     }
 
     //Create Survey Category
-    function CreateSurveyCategory(string memory name, string memory image)
-        public
-    {
+    function CreateSurveyCategory(
+        string memory name,
+        string memory image
+    ) public {
         // Store the metadata of Survey Category in the map.
         _categoryMap[_SurveyCategoryIds] = survey_category_struct({
             name: name,
@@ -324,11 +331,9 @@ contract WaveData {
     }
 
     //Get All Survey by Trial ID
-    function getAllSurveysIDByTrial(uint256 trial_id)
-        public
-        view
-        returns (uint256[] memory)
-    {
+    function getAllSurveysIDByTrial(
+        uint256 trial_id
+    ) public view returns (uint256[] memory) {
         uint256 _TemporarySearch = 0;
 
         for (uint256 i = 0; i < _SurveyIds; i++) {
@@ -350,8 +355,15 @@ contract WaveData {
         return _SearchedStore;
     }
 
+    // Get user wallet address by userid
+    function getUserAddress(uint256 user_id) public view returns (address) {
+        return (_userMap[user_id].walletaddress_address);
+    }
+
     //Get UserDetails by userid
-    function getUserDetails(uint256 user_id)
+    function getUserDetails(
+        uint256 user_id
+    )
         public
         view
         returns (
@@ -364,13 +376,12 @@ contract WaveData {
             uint256
         )
     {
-
         return (
             _userMap[user_id].image,
             _userMap[user_id].credits,
             _userMap[user_id].name,
             _userMap[user_id].email,
-           _userMap[user_id].privatekey,
+            _userMap[user_id].privatekey,
             _userMap[user_id].accesstoken,
             _userMap[user_id].fhirid
         );
@@ -420,9 +431,10 @@ contract WaveData {
     }
 
     //Update Audience
-    function UpdateAudience(uint256 trial_id, string memory audience_info)
-        public
-    {
+    function UpdateAudience(
+        uint256 trial_id,
+        string memory audience_info
+    ) public {
         // Update the metadata of Audience in the map.
         _trialAudienceMap[trial_id] = audience_info;
     }
@@ -447,7 +459,8 @@ contract WaveData {
         string memory phone,
         string memory gender,
         string memory about,
-        string memory patient_id
+        string memory patient_id,
+        address walletaddress_address
     ) public {
         // Update the metadata of FHIR in the map.
         _fhirMap[user_id].user_id = user_id;
@@ -458,6 +471,7 @@ contract WaveData {
         _fhirMap[user_id].gender = gender;
         _fhirMap[user_id].about = about;
         _fhirMap[user_id].patient_id = patient_id;
+        _userMap[user_id].walletaddress_address = walletaddress_address;
     }
 
     function CreateOngoingTrail(
@@ -478,11 +492,9 @@ contract WaveData {
         _OngoingIds++;
     }
 
-    function GetOngoingTrial(uint256 user_id)
-        public
-        view
-        returns (string memory)
-    {
+    function GetOngoingTrial(
+        uint256 user_id
+    ) public view returns (string memory) {
         ///Getting the found Ongoing Trial
         for (uint256 i = 0; i < _OngoingIds; i++) {
             if (_ongoingMap[i].user_id == user_id) {
@@ -534,11 +546,18 @@ contract WaveData {
         _CompletedSurveyIds++;
     }
 
-    function getAllCompletedSurveysIDByUser(uint256 user_id)
-        public
-        view
-        returns (uint256[] memory)
-    {
+    function WithDrawAmount(uint256 userid, uint256 amount) public {
+        (bool sent, ) = payable(_userMap[userid].walletaddress_address).call{
+            value: amount
+        }("");
+
+        require(sent, "Send failed");
+        _userMap[userid].credits -= amount;
+    }
+
+    function getAllCompletedSurveysIDByUser(
+        uint256 user_id
+    ) public view returns (uint256[] memory) {
         // Getting all completed surveys id by user id
         uint256 _TemporarySearch = 0;
 
@@ -621,18 +640,5 @@ contract WaveData {
         _OngoingIds = 0;
         _AnsweredIds = 0;
         _CompletedSurveyIds = 0;
-    }
-
-    function substring(
-        string memory str,
-        uint256 startIndex,
-        uint256 endIndex
-    ) private pure returns (string memory) {
-        bytes memory strBytes = bytes(str);
-        bytes memory result = new bytes(endIndex - startIndex);
-        for (uint256 i = startIndex; i < endIndex; i++) {
-            result[i - startIndex] = strBytes[i];
-        }
-        return string(result);
     }
 }

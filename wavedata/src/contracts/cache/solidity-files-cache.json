@@ -88,8 +88,8 @@
       ]
     },
     "H:\\Code\\Steve\\wavedata-Evmos(EVM)\\wavedata\\src\\contracts\\contracts\\WaveData.sol": {
-      "lastModificationDate": 1685253207640,
-      "contentHash": "6e35beb16e1df0e24179d92df243f56d",
+      "lastModificationDate": 1686279614580,
+      "contentHash": "0c274217e51a94e1bfbffc3e9107034e",
       "sourceName": "contracts/WaveData.sol",
       "solcConfig": {
         "version": "0.8.6",

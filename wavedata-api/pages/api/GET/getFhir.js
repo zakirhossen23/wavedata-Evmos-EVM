@@ -20,7 +20,8 @@ export default async function handler(req, res) {
 		patient_id: fhir_element.patient_id,
 		privatekey: userdetails[4] + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		image: fhir_element.image,
-		credits: fhir_element.credits
+		credits: fhir_element.credits,
+		wallet_address: userdetails[7]
 	};
 	if (newFhir.patient_id === "") {
 		newFhir = null;

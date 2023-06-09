@@ -8,6 +8,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:wavedata/components/data_edit_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -189,7 +190,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     setState(() {
       var imageData = dataUD['image'];
       ImageLink = imageData;
-      userDetails["credits"] = dataUD['credits'];
+      userDetails["credits"] = dataUD['credits'] / 1e18;
     });
 
     var urlFH = Uri.parse(
@@ -370,6 +371,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       await Future.delayed(Duration(seconds: 3));
       Navigator.pop(context);
     }
+
+    Future<void> WithdrawAmount(Amount) async {
+      final prefs = await SharedPreferences.getInstance();
+      int userid = int.parse(prefs.getString("userid").toString());
+
+      var url = Uri.parse(
+          'https://wavedata-evmos-api.onrender.com/api/POST/Trial/Survey/WithdrawAmount');
+      await http.post(url,
+          headers: POSTheader,
+          body: {'userid': userid.toString(), 'amount': Amount});
+      await GetAccountData();
+      Navigator.pop(context);
+    }
+
+    Future StartWithdrawDialog() => showDialog(
+        context: context, builder: (context) => WithdrawDialog(WithdrawAmount));
 
     Future startFunction(int trialid, String permissions) => showDialog(
         context: context,
@@ -1302,48 +1319,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                       ])),
                             ),
                           ),
-                          // Padding(
-                          //   padding:
-                          //       EdgeInsetsDirectional.fromSTEB(0, 5, 0, 10),
-                          //   child: Container(
-                          //     width: MediaQuery.of(context).size.width * 0.90,
-                          //     decoration: BoxDecoration(
-                          //       color: Color.fromARGB(255, 238, 238, 238),
-                          //       borderRadius: BorderRadius.circular(10),
-                          //     ),
-                          //     child: Padding(
-                          //       padding:
-                          //           EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                          //       child: Column(
-                          //         children: [
-                          //           CheckboxListTile(
-                          //             title: Text(
-                          //               'About',
-                          //               style: GoogleFonts.getFont(
-                          //                 'Lexend',
-                          //                 color: Colors.black,
-                          //                 fontWeight: FontWeight.w500,
-                          //               ),
-                          //             ),
-                          //             subtitle: Expanded(
-                          //                 child: Text(
-                          //               PatientDetails['disease'].toString(),
-                          //               style: GoogleFonts.getFont(
-                          //                 'Lexend Deca',
-                          //               ),
-                          //             )),
-                          //             value: this.boolAbout,
-                          //             onChanged: (value) {
-                          //               setState(() {
-                          //                 boolAbout = value!;
-                          //               });
-                          //             },
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           GestureDetector(
                               onTap: () async {
                                 await GenerateQRCode();
@@ -1461,13 +1436,20 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(4),
                                               ),
+                                              child: GestureDetector(
+                                                  onTap: (() async {
+                                                    await StartWithdrawDialog();
+                                                  }),
+                                                  behavior:
+                                                      HitTestBehavior.opaque,
                                               child: Text("Cash out",
                                                   style: GoogleFonts.getFont(
                                                       'Lexend Deca',
                                                       color: Colors.white,
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.bold)))
+                                                                  FontWeight
+                                                                      .bold)))),
                                         ],
                                       ),
                                     ),
@@ -1904,6 +1886,51 @@ class ActionTile extends StatelessWidget {
                 ),
               ],
             ),
+    );
+  }
+}
+
+class WithdrawDialog extends StatefulWidget {
+  final Function WithdrawAmount;
+  WithdrawDialog(this.WithdrawAmount);
+
+  @override
+  _WithdrawDialogState createState() => _WithdrawDialogState();
+}
+
+class _WithdrawDialogState extends State<WithdrawDialog> {
+  TextEditingController AmountTXT = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Withdraw Credits"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                  child: DataEditItem(label: "Amount", controller: AmountTXT),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      actions: [
+        TextButton(
+            onPressed: (() async {
+              await widget.WithdrawAmount(AmountTXT.text);
+            }),
+            child: Text("Accept"))
+      ],
     );
   }
 }

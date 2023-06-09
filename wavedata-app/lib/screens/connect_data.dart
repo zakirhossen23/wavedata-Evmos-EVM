@@ -18,7 +18,7 @@ class ConnectDataApp extends State<ConnectDataScreen> {
   TextEditingController GivenNameTXT = new TextEditingController();
   TextEditingController IdentifierTXT = new TextEditingController();
   TextEditingController FHIRIDTXT = new TextEditingController();
-  TextEditingController PrivateKeyTXT = new TextEditingController();
+  TextEditingController WalletAddTXT = new TextEditingController();
 
   bool isLoading = false;
   var POSTheader = {
@@ -37,29 +37,29 @@ class ConnectDataApp extends State<ConnectDataScreen> {
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString("userid");
     try {
-        var url = Uri.parse(
-        'https://wavedata-evmos-api.onrender.com/api/POST/UpadateFhir');
-    final response = await http.post(url, headers: POSTheader, body: {
-      'userid': userid,
-      'givenname': GivenNameTXT.text,
-      'identifier': IdentifierTXT.text,
-      'patientid': FHIRIDTXT.text
-    });
-    var responseData = json.decode(response.body);
-    if (responseData['status'] == 200) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(),
-        ),
-      );
-    } 
+      var url = Uri.parse(
+          'https://wavedata-evmos-api.onrender.com/api/POST/UpadateFhir');
+      final response = await http.post(url, headers: POSTheader, body: {
+        'userid': userid,
+        'givenname': GivenNameTXT.text,
+        'identifier': IdentifierTXT.text,
+        'patientid': FHIRIDTXT.text,
+        'wallet_address': WalletAddTXT.text
+      });
+      var responseData = json.decode(response.body);
+      if (responseData['status'] == 200) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(),
+          ),
+        );
+      }
     } catch (e) {
-       ScaffoldMessenger.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Please try again!")));
     }
-  
-     
+
     setState(() => isLoading = false);
     return;
   }
@@ -67,8 +67,9 @@ class ConnectDataApp extends State<ConnectDataScreen> {
   Future<void> GetData() async {
     final prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString("userid");
-   var url = Uri.parse('https://wavedata-evmos-api.onrender.com/api/GET/getFhir?userid=${int.parse(userid.toString())}');
-   
+    var url = Uri.parse(
+        'https://wavedata-evmos-api.onrender.com/api/GET/getFhir?userid=${int.parse(userid.toString())}');
+
     final response = await http.get(url);
     var responseData = json.decode(response.body);
     if (responseData['value'] != null) {
@@ -77,8 +78,7 @@ class ConnectDataApp extends State<ConnectDataScreen> {
         GivenNameTXT.text = data['given_name'];
         IdentifierTXT.text = data['identifier'];
         FHIRIDTXT.text = data['patient_id'].toString();
-        PrivateKeyTXT.text = data['privatekey'].toString();
-
+        WalletAddTXT.text = data['wallet_address'].toString();
       });
     }
   }
@@ -111,11 +111,11 @@ class ConnectDataApp extends State<ConnectDataScreen> {
                 //width: 400,
 
                 margin: const EdgeInsets.only(top: 24, left: 24, bottom: 24),
-                child: Text(
-                  'Connect your data.',
-                  style: GoogleFonts.getFont('Lexend Deca',  fontSize: 24,color: Colors.black,fontWeight: FontWeight.w600)
-                
-                ),
+                child: Text('Connect your data.',
+                    style: GoogleFonts.getFont('Lexend Deca',
+                        fontSize: 24,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600)),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 24, right: 24),
@@ -131,10 +131,11 @@ class ConnectDataApp extends State<ConnectDataScreen> {
                 margin: const EdgeInsets.only(left: 24, right: 24),
                 child: DataEditItem(
                     label: "FIHR Patient ID", controller: FHIRIDTXT),
-              ), Container(
+              ),
+              Container(
                 margin: const EdgeInsets.only(left: 24, right: 24),
                 child: DataEditItem(
-                    label: "Private key", controller: PrivateKeyTXT),
+                    label: "Wallet Address", controller: WalletAddTXT),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 12, right: 24),
@@ -147,17 +148,12 @@ class ConnectDataApp extends State<ConnectDataScreen> {
                             termsBool = val!;
                           });
                         }),
-                     Text(
-                      "By sharing your data you agree to our ",
-                      style: 
-                      GoogleFonts.getFont('Lexend Deca',  color: Colors.grey, fontWeight: FontWeight.w700)
-                
-                    ),
-                     Text(
-                      "terms",
-                      style:   GoogleFonts.getFont('Lexend Deca',  color: Colors.black, fontWeight: FontWeight.w500)
-                
-                    )
+                    Text("By sharing your data you agree to our ",
+                        style: GoogleFonts.getFont('Lexend Deca',
+                            color: Colors.grey, fontWeight: FontWeight.w700)),
+                    Text("terms",
+                        style: GoogleFonts.getFont('Lexend Deca',
+                            color: Colors.black, fontWeight: FontWeight.w500))
                   ],
                 ),
               ),
@@ -168,7 +164,8 @@ class ConnectDataApp extends State<ConnectDataScreen> {
                     if (isLoading) return;
                     if (GivenNameTXT.text == "" ||
                         IdentifierTXT.text == "" ||
-                        FHIRIDTXT.text == "") return;
+                        FHIRIDTXT.text == "" ||
+                        WalletAddTXT.text == "") return;
                     setState(() => isLoading = true);
                     await ConnectData();
                   },
@@ -190,11 +187,9 @@ class ConnectDataApp extends State<ConnectDataScreen> {
                                 height: 20.0,
                                 width: 20.0,
                               )
-                            : Text(
-                                "Connect",
-                                style:
-                                 GoogleFonts.getFont('Lexend Deca', fontSize: 16, color: Colors.white)
-                              ),
+                            : Text("Connect",
+                                style: GoogleFonts.getFont('Lexend Deca',
+                                    fontSize: 16, color: Colors.white)),
                       ),
                     ),
                   ),
