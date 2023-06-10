@@ -6,7 +6,8 @@ export default function useContract() {
 	const fetchData = async () => {
 		await sleep(200);
 		try {
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			if (window.ethereum != undefined){
+				const provider = new ethers.providers.Web3Provider(window.ethereum);
 				const signer = provider.getSigner();
 				const contract = {contract: null, signerAddress: null, sendTransaction: sendTransaction, fD: fetchData};
 
@@ -16,6 +17,8 @@ export default function useContract() {
 				window.contract = contract.contract;
 				window.sendTransaction = sendTransaction;
 				setContractInstance(contract);
+			}
+			
 		} catch (error) {
 			console.error(error);
 		}
