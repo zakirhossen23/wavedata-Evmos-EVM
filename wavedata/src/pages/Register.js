@@ -100,7 +100,7 @@ function Register() {
                     }
                     // handle other "switch" errors
                 }
-    
+                window.location.reload();
               
             } else {
                 window.open("https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn", "_about");

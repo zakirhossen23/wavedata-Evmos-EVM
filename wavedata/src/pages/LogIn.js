@@ -63,7 +63,7 @@ function Login() {
 			if (window.ethereum.selectedAddress != null) {
 				setisMetamaskConnected(true);
 				window.localStorage.setItem("type", "metamask")
-
+				window.location.reload();
 			} else {
 				setisMetamaskConnected(false);
 			}
