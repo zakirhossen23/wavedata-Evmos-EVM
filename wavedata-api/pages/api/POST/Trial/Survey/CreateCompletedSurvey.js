@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   let credits = Number(details_element[1]) + (Number(survey_element.reward)* 1e18)
 
   
-  await contract.UpdateUser(Number(userid), details_element[0], Number(credits),{
+  await contract.UpdateUser(Number(userid), details_element[0], (credits).toString(),{
 		from: signerAddress,
 		gasPrice: 10_000_000_000
 	});
