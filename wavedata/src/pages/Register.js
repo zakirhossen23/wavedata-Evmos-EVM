@@ -112,7 +112,7 @@ function Register() {
     }
     useEffect(() => {
         if (typeof window.ethereum !== "undefined") {
-            if (window.ethereum.selectedAddress !== false) {
+            if (window.ethereum.selectedAddress !== false && window.ethereum.selectedAddress !== null) {
                 setisMMConnected(true);
             } else {
                 setisMMConnected(false);

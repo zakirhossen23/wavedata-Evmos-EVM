@@ -133,7 +133,7 @@ function Login() {
 	}
 	useEffect(() => {
 		if (typeof window.ethereum !== "undefined") {
-			if (window.ethereum.selectedAddress !== false) {
+			if (window.ethereum.selectedAddress !== false && window.ethereum.selectedAddress !== null ) {
 				setisMetamaskConnected(true);
 			} else {
 				setisMetamaskConnected(false);
