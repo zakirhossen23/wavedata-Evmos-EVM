@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import Cookies from 'js-cookie'
 import logoicon from '../assets/wave-data-logo.svg'
 import { useState, useEffect } from 'react'
@@ -66,14 +67,13 @@ function Register() {
         if (type === 1) {
             if (typeof window.ethereum !== "undefined") {
 
-                let result = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                result;
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+               
                 try {
-                    const getacc = await window.ethereum.request({
+                   await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x2328', }], //9000
+                        params: [{ chainId: '0x2328' }] //9000
                     });
-                    getacc;
                 } catch (switchError) {
                     // This error code indicates that the chain has not been added to MetaMask.
                     if (switchError.code === 4902) {

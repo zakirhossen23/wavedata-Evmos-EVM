@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+
 import Cookies from "js-cookie";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -23,14 +25,14 @@ function Login() {
 	async function onClickConnect(type) {
 		if (type === 1) {
 
-			let result = await window.ethereum.request({ method: 'eth_requestAccounts' });
-			result;
+			 await window.ethereum.request({ method: 'eth_requestAccounts' });
+		
 			try {
-				const getacc = await window.ethereum.request({
+				 await window.ethereum.request({
 					method: 'wallet_switchEthereumChain',
-					params: [{ chainId: '0x2328', }], //9000
+					params: [{ chainId: '0x2328' }] //9000
 				});
-				getacc;
+				
 			} catch (switchError) {
 				// This error code indicates that the chain has not been added to MetaMask.
 				if (switchError.code === 4902) {
