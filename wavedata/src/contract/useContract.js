@@ -20,7 +20,6 @@ export default function useContract() {
 			}
 			
 		} catch (error) {
-			console.error(error);
 		}
 	};
 
