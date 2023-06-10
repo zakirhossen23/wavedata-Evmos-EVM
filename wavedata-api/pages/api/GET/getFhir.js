@@ -8,6 +8,7 @@ export default async function handler(req, res) {
 	const {contract, signerAddress} = await useContract.default();
 	
 	let userdetails = await contract.getUserDetails(Number(req.query.userid));
+	let wallet_address = await contract.getUserAddress(Number(req.query.userid));
 	let fhir_element = await contract._fhirMap(Number(req.query.userid));
 	var newFhir = {
 		id: Number(fhir_element.user_id),
@@ -18,10 +19,10 @@ export default async function handler(req, res) {
 		gender: fhir_element.gender,
 		about: fhir_element.about,
 		patient_id: fhir_element.patient_id,
-		privatekey: userdetails[4] + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-		image: fhir_element.image,
-		credits: fhir_element.credits,
-		wallet_address: userdetails[7]
+		privatekey: userdetails[4] ,
+		image:  userdetails[0],
+		credits:  Number(userdetails[1]),
+		wallet_address: wallet_address
 	};
 	if (newFhir.patient_id === "") {
 		newFhir = null;
