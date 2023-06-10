@@ -11,8 +11,8 @@ export default async function handler(req, res) {
 
     const { userid, amount } = req.body;
 
-
-    await contract.WithDrawAmount(Number(userid), Number(amount), {
+    let amountInFull =Number(amount) * 1e18;
+    await contract.WithDrawAmount(Number(userid), amountInFull.toString(), {
         from: signerAddress,
         gasPrice: 10_000_000_000
     });
